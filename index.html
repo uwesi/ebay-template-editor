@@ -3,228 +3,54 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>eBay Template Editor – No-Code</title>
+<title>eBay Template – Editor & Vorschau</title>
 
 <style>
 /* =========================
-   EDITOR (nur GitHub-Seite)
+   EDITOR (nur GitHub Pages)
    ========================= */
-:root{
-  --bg:#f4f6f8;
-  --accent:#0b79ff;
-  --card:#ffffff;
-  --radius:10px;
-}
 *{box-sizing:border-box}
 body{
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:#0b1a2b;
+  background:#f2f4f6;
+  color:#222;
 }
 .app{max-width:1200px;margin:12px auto;padding:12px}
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px;
+}
 h1{font-size:1rem;margin:0}
 .controls{display:flex;gap:8px;align-items:center}
 select,button,input,textarea{
   padding:8px;
   border-radius:8px;
-  border:1px solid #e0e6ee;
+  border:1px solid #dce1e7;
   font-size:0.95rem;
 }
-button{cursor:pointer}
+button{cursor:pointer;background:#0b79ff;color:#fff;border:none}
 .grid{display:grid;gap:12px}
 @media(min-width:960px){.grid{grid-template-columns:420px 1fr}}
 
 .form{
   background:#fff;
   padding:12px;
-  border-radius:var(--radius);
+  border-radius:10px;
   display:grid;
   gap:10px;
 }
 label{font-size:0.85rem}
 .preview{
   background:#fff;
-  border-radius:var(--radius);
+  border-radius:10px;
   padding:8px;
 }
-iframe{width:100%;height:600px;border:1px solid #e5eaf0;border-radius:6px}
-.small{font-size:0.8rem;color:#556}
-textarea{resize:vertical}
-
-/* =========================
-   EBAY TEMPLATE STYLES
-   ========================= */
-</style>
-</head>
-
-<body>
-<div class="app">
-
-<header>
-  <h1>eBay Template Editor (Privatverkauf)</h1>
-  <div class="controls">
-    <select id="theme">
-      <option value="blue">Blau (Standard)</option>
-      <option value="light">Hellgrau / Clean</option>
-      <option value="green">Grün</option>
-      <option value="dark">Anthrazit</option>
-      <option value="red">Bordeaux</option>
-    </select>
-    <button id="copy">HTML kopieren</button>
-  </div>
-</header>
-
-<div class="grid">
-
-<!-- ======= FORMULAR ======= -->
-<div class="form">
-
-<label>Titel
-<input id="title" placeholder="Artikelbezeichnung">
-</label>
-
-<label>Preis
-<input id="price" placeholder="z. B. 49,99 €">
-</label>
-
-<label>Zustand
-<input id="condition" placeholder="z. B. Gebraucht, Sehr gut">
-</label>
-
-<label>Beschreibung
-<textarea id="description" rows="5"></textarea>
-</label>
-
-<label>Bulletpoints (jede Zeile = ein Punkt)
-<textarea id="bullets" rows="6" placeholder="✔ stabil&#10;✔ gepflegt&#10;✔ Nichtraucherhaushalt"></textarea>
-</label>
-
-<label>Rechtshinweis
-<textarea id="legal" rows="3">
-Privatverkauf – keine Garantie, keine Gewährleistung, keine Rücknahme.
-</textarea>
-</label>
-
-<label class="small">
-<input type="checkbox" id="entities" checked>
- Umlaute automatisch in HTML-Entities umwandeln
-</label>
-
-</div>
-
-<!-- ======= VORSCHAU ======= -->
-<div class="preview">
-<iframe id="preview"></iframe>
-</div>
-
-</div>
-</div>
-
-<script>
-/* =========================
-   THEMES (FARBSETS)
-   ========================= */
-const THEMES={
-blue:{bg:"#0b2340",accent:"#0b79ff"},
-light:{bg:"#f7f7f7",accent:"#0b79ff"},
-green:{bg:"#0f3d2e",accent:"#2ecc71"},
-dark:{bg:"#1f2933",accent:"#9ca3af"},
-red:{bg:"#4c1d24",accent:"#b91c1c"}
-};
-
-/* =========================
-   UTILITIES
-   ========================= */
-function entities(s){
-  return s.replace(/&/g,"&amp;")
-          .replace(/</g,"&lt;")
-          .replace(/>/g,"&gt;")
-          .replace(/Ä/g,"&Auml;").replace(/ä/g,"&auml;")
-          .replace(/Ö/g,"&Ouml;").replace(/ö/g,"&ouml;")
-          .replace(/Ü/g,"&Uuml;").replace(/ü/g,"&uuml;")
-          .replace(/ß/g,"&szlig;");
-}
-
-/* =========================
-   UPDATE
-   ========================= */
-function update(){
-  const t=theme.value;
-  const th=THEMES[t];
-  let titleVal=title.value;
-  let descVal=description.value;
-  let legalVal=legal.value;
-  let bulletLines=bullets.value.split("\n").filter(b=>b.trim());
-
-  if(entitiesBox.checked){
-    titleVal=entities(titleVal);
-    descVal=entities(descVal);
-    legalVal=entities(legalVal);
-    bulletLines=bulletLines.map(b=>entities(b));
-  }
-
-  const bulletHtml=bulletLines.map(b=>`
-  <li><span class="check">✔</span>${b}</li>`).join("");
-
-  const html=`<!doctype html>
-<html lang="de">
-<head>
-<meta charset="utf-8">
-<style>
-body{margin:0;font-family:Arial;background:#f4f6f8}
-.card{max-width:900px;margin:10px auto;background:#fff;border-radius:12px;overflow:hidden}
-.header{background:${th.bg};color:#fff;padding:16px}
-.price{color:${th.accent};font-weight:bold}
-.section{padding:16px}
-ul{list-style:none;padding:0;margin:0}
-li{margin:6px 0}
-.check{color:${th.accent};font-weight:bold;margin-right:6px}
-.legal{font-size:12px;color:#555;border-top:1px dashed #ddd;padding:12px}
-</style>
-</head>
-<body>
-<div class="card">
-  <div class="header">
-    <h1>${titleVal}</h1>
-    <div class="price">${price.value}</div>
-    <div>${condition.value}</div>
-  </div>
-
-  <div class="section">
-    <p>${descVal}</p>
-    <ul>${bulletHtml}</ul>
-  </div>
-
-  <div class="legal">${legalVal}</div>
-</div>
-</body>
-</html>`;
-
-  preview.srcdoc=html;
-  window.finalHtml=html;
-}
-
-const theme=document.getElementById("theme");
-const title=document.getElementById("title");
-const price=document.getElementById("price");
-const condition=document.getElementById("condition");
-const description=document.getElementById("description");
-const bullets=document.getElementById("bullets");
-const legal=document.getElementById("legal");
-const entitiesBox=document.getElementById("entities");
-const preview=document.getElementById("preview");
-
-document.querySelectorAll("input,textarea,select")
-  .forEach(e=>e.addEventListener("input",update));
-
-document.getElementById("copy").onclick=()=>{
-  navigator.clipboard.writeText(window.finalHtml);
-  alert("HTML kopiert – bereit für eBay");
-};
-
-update();
-</script>
-</body>
-</html>
+iframe{
+  width:100%;
+  height:620px;
+  border:1px solid #e3e7ed;
+  border-
