@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>eBay Template Editor – Debug-freundlich</title>
+<title>eBay Template Editor – Vorversion (dein Design)</title>
 <style>
-  /* Minimal Editor Styles (GitHub Pages only) */
+  /* Editor UI (nur für GitHub Pages) */
   *{box-sizing:border-box}
   body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;color:#111}
   .app{max-width:1100px;margin:14px auto;padding:12px}
@@ -20,184 +20,183 @@
   label{display:block;font-size:0.9rem;margin-bottom:6px}
   input,textarea,select{width:100%;font-size:0.95rem}
   textarea{resize:vertical;min-height:90px}
-  iframe{width:100%;height:640px;border:1px solid #e6eef6;border-radius:6px}
+  iframe{width:100%;height:720px;border:1px solid #e6eef6;border-radius:6px}
   .error-banner{background:#fff0f0;border:1px solid #ffb3b3;color:#8a1212;padding:12px;border-radius:8px;margin-bottom:12px;display:none}
-  .hint{font-size:0.85rem;color:#556;margin-top:8px}
   .small{font-size:0.85rem;color:#556}
+  .hint{font-size:0.85rem;color:#556;margin-top:8px}
 </style>
 </head>
 <body>
   <div class="app">
-    <div id="error" class="error-banner" role="alert" aria-live="assertive"></div>
-
     <header>
-      <h1>eBay Template Editor (Debug-Version)</h1>
+      <h1>eBay Template Editor — Dein vorheriges Design</h1>
       <div class="controls">
-        <select id="theme" title="Design wählen">
-          <option value="blue">🔵 Blau</option>
-          <option value="light">⚪ Hell</option>
-          <option value="green">🟢 Grün</option>
-          <option value="dark">⚫ Anthrazit</option>
-          <option value="red">🔴 Bordeaux</option>
-        </select>
+        <label style="display:flex;align-items:center;gap:8px">
+          Design:
+          <select id="theme">
+            <option value="original">Dein Design (Standard)</option>
+            <option value="blue">Blau (Alternative)</option>
+            <option value="light">Hell (Alternative)</option>
+          </select>
+        </label>
         <button id="copyBtn">HTML kopieren</button>
       </div>
     </header>
 
     <div class="grid">
+      <!-- Editor -->
       <div class="card">
         <label>Titel
-          <input id="title" value="Beispiel: Ikea Sofa 3-Sitzer" />
+          <input id="title" value="eBay Template 2026 Vorlage + Online Editor | Mobil optimiert | Privatverkäufer">
         </label>
 
-        <label>Beschreibung
-          <textarea id="description">Beispielbeschreibung: gut erhalten, Nichtraucherhaushalt. Maße: L x B x H.</textarea>
+        <label>Intro-Text / Lead (erscheint in Beschreibung oben)
+          <textarea id="lead">🚀 Verkaufe wie ein Profi – Mehr Erfolg für deine eBay-Anzeigen!</textarea>
         </label>
 
-        <label>Bulletpoints (jede Zeile ein Punkt)
-          <textarea id="bullets">Stabil und bequem
-Geringe Gebrauchsspuren
-Nichtraucherhaushalt</textarea>
+        <label>Langtext / Beschreibung
+          <textarea id="description">Das erste eBay-Template inklusive Online-Editor – speziell entwickelt für Privatverkäufer & Einsteiger.
+
+Warum dieses Template? Hast du dich schon mal gefragt, warum manche Artikel auf eBay deutlich höhere Preise erzielen als andere? Das Geheimnis ist Vertrauen durch Professionalität. Mit diesem Template verwandelst du eine einfache Textwüste in ein hochwertiges Shop-Design.</textarea>
         </label>
 
-        <label>Rechtshinweis
-          <textarea id="legal">&lt;RECHTS-HINWEIS: Privatverk&auml;ufer – keine Garantie, keine R&uuml;cknahme.&gt;</textarea>
+        <label>Lieferumfang (jede Zeile = ein Punkt)
+          <textarea id="delivery">Kauf: Du erh&auml;ltst sofort nach Zahlungseingang den Link zu deinem pers&ouml;nlichen Editor.
+Eingabe: Tippe deine Artikeldaten bequem in die Maske.
+Kopieren: Ein Klick auf "Code kopieren" gen&uuml;gt.
+Einf&uuml;gen: F&uuml;ge den Code bei eBay im Reiter "HTML" ein.</textarea>
         </label>
 
-        <label class="small"><input id="entities" type="checkbox" checked /> Umlaute automatisch in HTML-Entities umwandeln</label>
+        <label>Details (z. B. Zustand / Abholort): (Formate: Label:Wert pro Zeile)
+          <textarea id="details">Zustand:Neu
+Abholort:Nicht zutreffend</textarea>
+        </label>
 
-        <p class="hint">Wenn beim Laden etwas schiefgeht, wird oben eine Fehlermeldung angezeigt. Öffne die Entwickler-Konsole (F12) für Details.</p>
+        <label>Badges (Zeilenweise - erscheinen in der Leiste)
+          <textarea id="badges">📦 Schneller Versand
+🤝 Privatverkauf
+⭐ Geprüfte Qualität</textarea>
+        </label>
+
+        <label>Rechtshinweis (Privatverkäufer)
+          <textarea id="legal">&lt;Rechtlicher Hinweis:&gt; Der Verkauf erfolgt unter Ausschluss jeglicher Sachmangelhaftung. Keine R&uuml;cknahme.</textarea>
+        </label>
+
+        <label class="small"><input id="entities" type="checkbox" checked> Umlaute automatisch in HTML-Entities umwandeln</label>
+
+        <p class="hint">Tipp: Nach dem Klick auf "HTML kopieren" füge den Inhalt in den eBay-HTML-Editor ein und prüfe die mobile Vorschau.</p>
       </div>
 
+      <!-- Vorschau -->
       <div class="card">
-        <iframe id="preview" title="Live-Vorschau" sandbox="allow-same-origin"></iframe>
+        <iframe id="preview" title="Live Vorschau" sandbox="allow-same-origin"></iframe>
       </div>
     </div>
   </div>
 
 <script>
-/* --- Defensive JS: fängt Fehler und zeigt sie sichtbar an --- */
+/* Revertierte Vorlage: Das HTML-Layout sehr nahe an deinem ursprünglichen HTML.
+   JS ersetzt Inhalte aus den Eingabefeldern und zeigt die Vorschau im iframe.
+   Enthält responsive Ergänzungen (meta viewport, table stacking).
+*/
+
 (function(){
-  const showError = (msg)=> {
-    const el = document.getElementById('error');
-    el.style.display = 'block';
-    el.textContent = 'Fehler im Editor: ' + msg;
-    console.error('Editor-Fehler:', msg);
-  };
+  const title = document.getElementById('title');
+  const lead = document.getElementById('lead');
+  const description = document.getElementById('description');
+  const delivery = document.getElementById('delivery');
+  const details = document.getElementById('details');
+  const badges = document.getElementById('badges');
+  const legal = document.getElementById('legal');
+  const entitiesBox = document.getElementById('entities');
+  const preview = document.getElementById('preview');
+  const copyBtn = document.getElementById('copyBtn');
+  const theme = document.getElementById('theme');
 
-  window.onerror = function(message, source, lineno, colno, error){
-    try { showError(String(message || error || 'Unbekannter Fehler')); } catch(e){}
-  };
-
-  window.addEventListener('unhandledrejection', function(evt){
-    try { showError('Unhandled Promise Rejection: ' + (evt.reason && evt.reason.message ? evt.reason.message : String(evt.reason))); } catch(e){}
-  });
-
-  try {
-    // Elemente
-    const theme = document.getElementById('theme');
-    const title = document.getElementById('title');
-    const description = document.getElementById('description');
-    const bullets = document.getElementById('bullets');
-    const legal = document.getElementById('legal');
-    const preview = document.getElementById('preview');
-    const copyBtn = document.getElementById('copyBtn');
-    const entitiesBox = document.getElementById('entities');
-
-    if(!preview) throw new Error('Vorschau-iframe fehlt');
-
-    // Hilfsfunktionen
-    const toEntities = (s) => {
-      if(!s) return '';
-      return String(s)
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#39;')
-        .replace(/Ä/g,'&Auml;').replace(/ä/g,'&auml;')
-        .replace(/Ö/g,'&Ouml;').replace(/ö/g,'&ouml;')
-        .replace(/Ü/g,'&Uuml;').replace(/ü/g,'&uuml;')
-        .replace(/ß/g,'&szlig;');
-    };
-
-    const THEMES = {
-      blue:{bg:'#232f3e',accent:'#febd69'},
-      light:{bg:'#f7f7f7',accent:'#0b79ff'},
-      green:{bg:'#0f3d2e',accent:'#2ecc71'},
-      dark:{bg:'#1f2933',accent:'#9ca3af'},
-      red:{bg:'#4c1d24',accent:'#b91c1c'}
-    };
-
-    // Build HTML für iframe
-    function buildHtml(){
-      const th = THEMES[theme.value] || THEMES.blue;
-      let t = title.value || '';
-      let d = description.value || '';
-      let l = legal.value || '';
-      let bLines = (bullets.value || '').split('\\n').map(x => x.trim()).filter(Boolean);
-
-      if(entitiesBox.checked){
-        t = toEntities(t);
-        d = toEntities(d);
-        l = toEntities(l);
-        bLines = bLines.map(toEntities);
-      }
-
-      const bulletsHtml = bLines.map(b => '<li><span class="check">✔</span><span class="btext">'+b+'</span></li>').join('');
-
-      const html = '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
-      '<style>' +
-      'html,body{margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;color:#111}' +
-      '.wrap{max-width:850px;width:100%;margin:10px auto;background:#fff;border:1px solid #ddd;border-radius:8px;overflow:hidden;box-sizing:border-box}' +
-      '.header{background:'+th.bg+';color:#fff;padding:18px;text-align:center}.header h1{margin:0;font-size:1.05rem}' +
-      '.content{padding:16px;line-height:1.5;color:#222}.price{color:'+th.accent+';font-weight:700}' +
-      'ul{list-style:none;padding:0;margin:10px 0}li{display:flex;align-items:flex-start;margin:6px 0;word-break:break-word}.check{color:'+th.accent+';margin-right:8px}' +
-      '.notice{font-size:12px;color:#666;border-top:1px dashed #ddd;padding-top:12px;margin-top:12px}' +
-      '@media(max-width:480px){.header h1{font-size:1rem}.content{padding:12px}}' +
-      '</style></head><body>' +
-      '<div class="wrap" role="article"><div class="header"><h1>'+ (t || '&nbsp;') +'</h1></div>' +
-      '<div class="content"><p>' + (d || '&nbsp;') + '</p>' + (bulletsHtml ? '<ul>' + bulletsHtml + '</ul>' : '') +
-      '<div class="notice">' + (l || '&nbsp;') + '</div></div></div></body></html>';
-
-      return html;
-    }
-
-    // Update preview
-    function update(){
-      try {
-        const html = buildHtml();
-        preview.srcdoc = html;
-        window.finalHtml = html;
-      } catch(e){
-        showError('Fehler beim Erstellen der Vorschau: ' + (e && e.message ? e.message : e));
-      }
-    }
-
-    // Copy handler
-    copyBtn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(window.finalHtml || '');
-        copyBtn.textContent = 'Kopiert!';
-        setTimeout(()=>copyBtn.textContent = 'HTML kopieren', 1200);
-      } catch(e){
-        showError('Kopieren fehlgeschlagen: ' + (e && e.message ? e.message : e));
-      }
-    });
-
-    // Input listeners
-    [theme, title, description, bullets, legal, entitiesBox].forEach(el => {
-      el.addEventListener('input', update);
-    });
-
-    // initial render
-    update();
-
-  } catch(err){
-    try { document.getElementById('error').textContent = 'Initialisierung fehlgeschlagen: ' + err.message; document.getElementById('error').style.display='block'; } catch(e){}
-    console.error('Initialisierungsfehler:', err);
+  function toEntities(s){
+    if(!s) return '';
+    return String(s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;')
+      .replace(/Ä/g,'&Auml;').replace(/ä/g,'&auml;')
+      .replace(/Ö/g,'&Ouml;').replace(/ö/g,'&ouml;')
+      .replace(/Ü/g,'&Uuml;').replace(/ü/g,'&uuml;')
+      .replace(/ß/g,'&szlig;');
   }
-})();
-</script>
-</body>
-</html>
+
+  function parseLinesToList(text){
+    return (text||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  }
+
+  function parseDetails(text){
+    const lines = parseLinesToList(text);
+    return lines.map(l=>{
+      const parts = l.split(':');
+      const k = parts.shift() || '';
+      const v = parts.join(':') || '';
+      return {k:k.trim(), v:v.trim()};
+    });
+  }
+
+  function buildDeliveryHtml(lines, convert){
+    // lines array -> rows in the box
+    return lines.map(l=>{
+      const val = convert? toEntities(l) : l;
+      return `<div style="display:flex; align-items:center; padding:5px 0; border-bottom:1px solid #eee; font-size:15px;">
+                <span style="color:#2e7d32; margin-right:10px; font-weight:bold;">✓</span>
+                <span>${val}</span>
+              </div>`;
+    }).join('');
+  }
+
+  function buildBadgesHtml(lines, convert){
+    return lines.map(l=>{
+      const val = convert? toEntities(l) : l;
+      return `<span role="listitem" style="display:inline-flex;align-items:center;gap:6px">${val}</span>`;
+    }).join('');
+  }
+
+  function buildDetailsTable(detailsArr, convert){
+    // Returns table html; on mobile CSS will stack rows
+    return detailsArr.map(d=>{
+      const k = convert? toEntities(d.k) : d.k;
+      const v = convert? toEntities(d.v) : d.v;
+      return `<tr><td style="padding:10px; border:1px solid #eee; font-weight:bold; width:35%;">${k}</td><td style="padding:10px; border:1px solid #eee;">${v}</td></tr>`;
+    }).join('');
+  }
+
+  function buildFullHtml(){
+    const convert = entitiesBox.checked;
+    const t = convert ? toEntities(title.value) : (title.value || '');
+    const leadText = convert ? toEntities(lead.value) : (lead.value || '');
+    const desc = convert ? toEntities(description.value).replace(/\n/g,'<br>') : (description.value || '').replace(/\n/g,'<br>');
+    const deliveryLines = parseLinesToList(delivery.value);
+    const deliveryHtml = buildDeliveryHtml(deliveryLines, convert);
+    const badgesLines = parseLinesToList(badges.value);
+    const badgesHtml = buildBadgesHtml(badgesLines, convert);
+    const detailsArr = parseDetails(details.value);
+    const detailsTable = buildDetailsTable(detailsArr, convert);
+    const legalText = convert ? toEntities(legal.value).replace(/\n/g,'<br>') : (legal.value || '').replace(/\n/g,'<br>');
+
+    // theme slight variations (only colors)
+    const themeChoice = theme.value || 'original';
+    const headerBg = themeChoice === 'blue' ? '#232f3e' : (themeChoice === 'light' ? '#f7f7f7' : '#232f3e');
+    const badgesBg = themeChoice === 'blue' ? '#37475a' : (themeChoice === 'light' ? '#e9eef6' : '#37475a');
+    const headerColor = (themeChoice === 'light') ? '#232f3e' : '#fff';
+
+    const html = `<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${t || 'Angebot'}</title>
+<style>
+  html,body{margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;background:#f2f4f6;color:#333}
+  .wrap{width:100%;max-width:850px;margin:10px auto;background:#fff;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;overflow:hidden}
+  .hero{background:${headerBg};color:${headerColor};padding:25px;text-align:center;border-radius:8px 8px 0 0}
+  .hero h1{margin:0;font-size:24px}
+  .badges{background:${badgesBg};co
+
