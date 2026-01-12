@@ -1,202 +1,202 @@
 <!doctype html>
 <html lang="de">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>eBay Template Editor – Vorversion (dein Design)</title>
-<style>
-  /* Editor UI (nur für GitHub Pages) */
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;color:#111}
-  .app{max-width:1100px;margin:14px auto;padding:12px}
-  header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
-  h1{font-size:1rem;margin:0}
-  .controls{display:flex;gap:8px;align-items:center}
-  select,button,input,textarea{padding:8px;border-radius:8px;border:1px solid #dde6ef;background:#fff}
-  button{cursor:pointer;background:#0b79ff;color:#fff;border:none}
-  .grid{display:grid;gap:12px}
-  @media(min-width:960px){.grid{grid-template-columns:420px 1fr}}
-  .card{background:#fff;padding:12px;border-radius:10px;border:1px solid #e6eef6}
-  label{display:block;font-size:0.9rem;margin-bottom:6px}
-  input,textarea,select{width:100%;font-size:0.95rem}
-  textarea{resize:vertical;min-height:90px}
-  iframe{width:100%;height:720px;border:1px solid #e6eef6;border-radius:6px}
-  .error-banner{background:#fff0f0;border:1px solid #ffb3b3;color:#8a1212;padding:12px;border-radius:8px;margin-bottom:12px;display:none}
-  .small{font-size:0.85rem;color:#556}
-  .hint{font-size:0.85rem;color:#556;margin-top:8px}
-</style>
-</head>
-<body>
-  <div class="app">
-    <header>
-      <h1>eBay Template Editor — Dein vorheriges Design</h1>
-      <div class="controls">
-        <label style="display:flex;align-items:center;gap:8px">
-          Design:
-          <select id="theme">
-            <option value="original">Dein Design (Standard)</option>
-            <option value="blue">Blau (Alternative)</option>
-            <option value="light">Hell (Alternative)</option>
-          </select>
-        </label>
-        <button id="copyBtn">HTML kopieren</button>
-      </div>
-    </header>
-
-    <div class="grid">
-      <!-- Editor -->
-      <div class="card">
-        <label>Titel
-          <input id="title" value="eBay Template 2026 Vorlage + Online Editor | Mobil optimiert | Privatverkäufer">
-        </label>
-
-        <label>Intro-Text / Lead (erscheint in Beschreibung oben)
-          <textarea id="lead">🚀 Verkaufe wie ein Profi – Mehr Erfolg für deine eBay-Anzeigen!</textarea>
-        </label>
-
-        <label>Langtext / Beschreibung
-          <textarea id="description">Das erste eBay-Template inklusive Online-Editor – speziell entwickelt für Privatverkäufer & Einsteiger.
-
-Warum dieses Template? Hast du dich schon mal gefragt, warum manche Artikel auf eBay deutlich höhere Preise erzielen als andere? Das Geheimnis ist Vertrauen durch Professionalität. Mit diesem Template verwandelst du eine einfache Textwüste in ein hochwertiges Shop-Design.</textarea>
-        </label>
-
-        <label>Lieferumfang (jede Zeile = ein Punkt)
-          <textarea id="delivery">Kauf: Du erh&auml;ltst sofort nach Zahlungseingang den Link zu deinem pers&ouml;nlichen Editor.
-Eingabe: Tippe deine Artikeldaten bequem in die Maske.
-Kopieren: Ein Klick auf "Code kopieren" gen&uuml;gt.
-Einf&uuml;gen: F&uuml;ge den Code bei eBay im Reiter "HTML" ein.</textarea>
-        </label>
-
-        <label>Details (z. B. Zustand / Abholort): (Formate: Label:Wert pro Zeile)
-          <textarea id="details">Zustand:Neu
-Abholort:Nicht zutreffend</textarea>
-        </label>
-
-        <label>Badges (Zeilenweise - erscheinen in der Leiste)
-          <textarea id="badges">📦 Schneller Versand
-🤝 Privatverkauf
-⭐ Geprüfte Qualität</textarea>
-        </label>
-
-        <label>Rechtshinweis (Privatverkäufer)
-          <textarea id="legal">&lt;Rechtlicher Hinweis:&gt; Der Verkauf erfolgt unter Ausschluss jeglicher Sachmangelhaftung. Keine R&uuml;cknahme.</textarea>
-        </label>
-
-        <label class="small"><input id="entities" type="checkbox" checked> Umlaute automatisch in HTML-Entities umwandeln</label>
-
-        <p class="hint">Tipp: Nach dem Klick auf "HTML kopieren" füge den Inhalt in den eBay-HTML-Editor ein und prüfe die mobile Vorschau.</p>
-      </div>
-
-      <!-- Vorschau -->
-      <div class="card">
-        <iframe id="preview" title="Live Vorschau" sandbox="allow-same-origin"></iframe>
-      </div>
-    </div>
-  </div>
-
-<script>
-/* Revertierte Vorlage: Das HTML-Layout sehr nahe an deinem ursprünglichen HTML.
-   JS ersetzt Inhalte aus den Eingabefeldern und zeigt die Vorschau im iframe.
-   Enthält responsive Ergänzungen (meta viewport, table stacking).
-*/
-
-(function(){
-  const title = document.getElementById('title');
-  const lead = document.getElementById('lead');
-  const description = document.getElementById('description');
-  const delivery = document.getElementById('delivery');
-  const details = document.getElementById('details');
-  const badges = document.getElementById('badges');
-  const legal = document.getElementById('legal');
-  const entitiesBox = document.getElementById('entities');
-  const preview = document.getElementById('preview');
-  const copyBtn = document.getElementById('copyBtn');
-  const theme = document.getElementById('theme');
-
-  function toEntities(s){
-    if(!s) return '';
-    return String(s)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;')
-      .replace(/'/g,'&#39;')
-      .replace(/Ä/g,'&Auml;').replace(/ä/g,'&auml;')
-      .replace(/Ö/g,'&Ouml;').replace(/ö/g,'&ouml;')
-      .replace(/Ü/g,'&Uuml;').replace(/ü/g,'&uuml;')
-      .replace(/ß/g,'&szlig;');
-  }
-
-  function parseLinesToList(text){
-    return (text||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-  }
-
-  function parseDetails(text){
-    const lines = parseLinesToList(text);
-    return lines.map(l=>{
-      const parts = l.split(':');
-      const k = parts.shift() || '';
-      const v = parts.join(':') || '';
-      return {k:k.trim(), v:v.trim()};
-    });
-  }
-
-  function buildDeliveryHtml(lines, convert){
-    // lines array -> rows in the box
-    return lines.map(l=>{
-      const val = convert? toEntities(l) : l;
-      return `<div style="display:flex; align-items:center; padding:5px 0; border-bottom:1px solid #eee; font-size:15px;">
-                <span style="color:#2e7d32; margin-right:10px; font-weight:bold;">✓</span>
-                <span>${val}</span>
-              </div>`;
-    }).join('');
-  }
-
-  function buildBadgesHtml(lines, convert){
-    return lines.map(l=>{
-      const val = convert? toEntities(l) : l;
-      return `<span role="listitem" style="display:inline-flex;align-items:center;gap:6px">${val}</span>`;
-    }).join('');
-  }
-
-  function buildDetailsTable(detailsArr, convert){
-    // Returns table html; on mobile CSS will stack rows
-    return detailsArr.map(d=>{
-      const k = convert? toEntities(d.k) : d.k;
-      const v = convert? toEntities(d.v) : d.v;
-      return `<tr><td style="padding:10px; border:1px solid #eee; font-weight:bold; width:35%;">${k}</td><td style="padding:10px; border:1px solid #eee;">${v}</td></tr>`;
-    }).join('');
-  }
-
-  function buildFullHtml(){
-    const convert = entitiesBox.checked;
-    const t = convert ? toEntities(title.value) : (title.value || '');
-    const leadText = convert ? toEntities(lead.value) : (lead.value || '');
-    const desc = convert ? toEntities(description.value).replace(/\n/g,'<br>') : (description.value || '').replace(/\n/g,'<br>');
-    const deliveryLines = parseLinesToList(delivery.value);
-    const deliveryHtml = buildDeliveryHtml(deliveryLines, convert);
-    const badgesLines = parseLinesToList(badges.value);
-    const badgesHtml = buildBadgesHtml(badgesLines, convert);
-    const detailsArr = parseDetails(details.value);
-    const detailsTable = buildDetailsTable(detailsArr, convert);
-    const legalText = convert ? toEntities(legal.value).replace(/\n/g,'<br>') : (legal.value || '').replace(/\n/g,'<br>');
-
-    // theme slight variations (only colors)
-    const themeChoice = theme.value || 'original';
-    const headerBg = themeChoice === 'blue' ? '#232f3e' : (themeChoice === 'light' ? '#f7f7f7' : '#232f3e');
-    const badgesBg = themeChoice === 'blue' ? '#37475a' : (themeChoice === 'light' ? '#e9eef6' : '#37475a');
-    const headerColor = (themeChoice === 'light') ? '#232f3e' : '#fff';
-
-    const html = `<!doctype html>
-<html lang="de">
-<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${t || 'Angebot'}</title>
-<style>
-  html,body{margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;background:#f2f4f6;color:#333}
-  .wrap{width:100%;max-width:850px;margin:10px auto;background:#fff;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;overflow:hidden}
-  .hero{background:${headerBg};color:${headerColor};padding:25px;text-align:center;border-radius:8px 8px 0 0}
-  .hero h1{margin:0;font-size:24px}
-  .badges{background:${badgesBg};co
+<title>eBay Template Editor – Final</title>
 
+<style>
+/* ========= EDITOR UI (nur GitHub) ========= */
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;color:#111}
+.app{max-width:1200px;margin:12px auto;padding:12px}
+header{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:12px}
+h1{font-size:1rem;margin:0}
+.controls{display:flex;gap:6px;flex-wrap:wrap}
+button,input,textarea{
+  padding:8px;border-radius:8px;border:1px solid #dde6ef;font-size:0.9rem
+}
+button{cursor:pointer}
+.primary{background:#0b79ff;color:#fff;border:none}
+.grid{display:grid;gap:12px}
+@media(min-width:960px){.grid{grid-template-columns:420px 1fr}}
+.card{background:#fff;padding:12px;border-radius:10px;border:1px solid #e6eef6}
+label{font-size:0.85rem}
+textarea{width:100%;min-height:80px;resize:vertical}
+input{width:100%}
+.small{font-size:0.8rem;color:#555}
+
+/* ========= PREVIEW ========= */
+.preview-desktop iframe{width:100%}
+.preview-mobile{display:flex;justify-content:center}
+.preview-mobile iframe{
+  width:375px;
+  max-width:100%;
+  border:2px solid #d1d5db;
+  border-radius:18px;
+  background:#fff;
+}
+iframe{height:720px;border:1px solid #e6eef6;border-radius:6px}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+  <h1>eBay Template Editor (Final)</h1>
+  <div class="controls">
+    <button id="viewDesktop">🖥 Desktop</button>
+    <button id="viewMobile">📱 Mobile</button>
+    <button id="copyStandard">HTML kopieren</button>
+    <button id="copyInline" class="primary">HTML kopieren (eBay-sicher)</button>
+  </div>
+</header>
+
+<div class="grid">
+
+<!-- ===== EDITOR ===== -->
+<div class="card">
+  <label>Titel
+    <input id="title" value="eBay Template 2026 Vorlage + Online Editor | Mobil optimiert | Privatverkäufer">
+  </label>
+
+  <label>Lead
+    <textarea id="lead">🚀 Verkaufe wie ein Profi – Mehr Erfolg für deine eBay-Anzeigen!</textarea>
+  </label>
+
+  <label>Beschreibung
+    <textarea id="description">Professionelles eBay-Template inklusive Online-Editor – ideal für Privatverkäufer.</textarea>
+  </label>
+
+  <label>Badges (eine Zeile = ein Badge)
+    <textarea id="badges">📦 Schneller Versand
+🤝 Privatverkauf
+⭐ Geprüfte Qualität</textarea>
+  </label>
+
+  <label>Lieferumfang (Checkliste)
+    <textarea id="delivery">Kauf: Link zum Editor
+Eingabe: Daten eintragen
+Kopieren: Code kopieren
+Einfügen: In eBay HTML-Editor</textarea>
+  </label>
+
+  <label>Details (Label:Wert)
+    <textarea id="details">Zustand:Neu
+Abholort:Nicht zutreffend</textarea>
+  </label>
+
+  <label>Rechtshinweis
+    <textarea id="legal">Der Verkauf erfolgt unter Ausschluss jeglicher Sachmangelhaftung. Keine Rücknahme.</textarea>
+  </label>
+
+  <label class="small">
+    <input type="checkbox" id="entities" checked> Umlaute in HTML-Entities umwandeln
+  </label>
+</div>
+
+<!-- ===== PREVIEW ===== -->
+<div class="card preview-desktop" id="previewWrap">
+  <iframe id="preview"></iframe>
+</div>
+
+</div>
+</div>
+
+<script>
+/* ========= HELPERS ========= */
+const $=id=>document.getElementById(id);
+const ent=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+ .replace(/Ä/g,'&Auml;').replace(/ä/g,'&auml;')
+ .replace(/Ö/g,'&Ouml;').replace(/ö/g,'&ouml;')
+ .replace(/Ü/g,'&Uuml;').replace(/ü/g,'&uuml;')
+ .replace(/ß/g,'&szlig;');
+const lines=v=>v.split('\n').map(x=>x.trim()).filter(Boolean);
+
+/* ========= BUILD HTML ========= */
+function buildHtml(inline=false){
+ const c=$('entities').checked;
+ const t=c?ent($('title').value):$('title').value;
+ const lead=c?ent($('lead').value):$('lead').value;
+ const desc=c?ent($('description').value):$('description').value;
+ const legal=c?ent($('legal').value):$('legal').value;
+
+ const badges=lines($('badges').value).map(b=>`<span>${c?ent(b):b}</span>`).join('');
+ const delivery=lines($('delivery').value).map(d=>`
+ <div class="row"><span class="check">✓</span><span>${c?ent(d):d}</span></div>`).join('');
+ const details=lines($('details').value).map(l=>{
+  const p=l.split(':');
+  return `<tr><td><b>${c?ent(p[0]):p[0]}</b></td><td>${c?ent(p.slice(1).join(':')):p.slice(1).join(':')}</td></tr>`;
+ }).join('');
+
+ let style=inline?'':`
+<style>
+body{margin:0;font-family:Arial;background:#f4f6f8}
+.wrap{max-width:850px;margin:10px auto;background:#fff;border:1px solid #ddd;border-radius:8px}
+.hero{background:#232f3e;color:#fff;padding:25px;text-align:center}
+.badges{background:#37475a;color:#fff;display:flex;justify-content:space-around;padding:10px;font-size:13px;flex-wrap:wrap}
+.content{padding:25px}
+.row{display:flex;gap:10px;border-bottom:1px solid #eee;padding:5px 0}
+.check{color:#2e7d32;font-weight:bold}
+.notice{font-size:12px;color:#666;border-top:1px dashed #ddd;padding-top:12px;margin-top:20px}
+table{width:100%;border-collapse:collapse}
+td{border:1px solid #eee;padding:10px}
+</style>`;
+
+ let html=`
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">${style}
+</head><body>
+<div class="wrap">
+<div class="hero"><h1>${t}</h1></div>
+<div class="badges">${badges}</div>
+<div class="content">
+<p>${lead}<br><br>${desc}</p>
+<h3>Lieferumfang</h3>${delivery}
+<h3>Details & Zustand</h3><table>${details}</table>
+<div class="notice"><b>Rechtlicher Hinweis:</b> ${legal}</div>
+</div></div></body></html>`;
+
+ if(inline){
+  html=html.replace('class="wrap"','style="max-width:850px;margin:10px auto;background:#fff;border:1px solid #ddd;border-radius:8px"')
+   .replace('class="hero"','style="background:#232f3e;color:#fff;padding:25px;text-align:center"')
+   .replace('class="badges"','style="background:#37475a;color:#fff;display:flex;justify-content:space-around;padding:10px;font-size:13px;flex-wrap:wrap"')
+   .replace(/class="row"/g,'style="display:flex;gap:10px;border-bottom:1px solid #eee;padding:5px 0"')
+   .replace(/class="check"/g,'style="color:#2e7d32;font-weight:bold"')
+   .replace('<table>','<table style="width:100%;border-collapse:collapse">')
+   .replace(/<td>/g,'<td style="border:1px solid #eee;padding:10px">')
+   .replace('class="notice"','style="font-size:12px;color:#666;border-top:1px dashed #ddd;padding-top:12px;margin-top:20px"');
+ }
+ return html;
+}
+
+/* ========= PREVIEW ========= */
+function update(){ $('preview').srcdoc=buildHtml(false); }
+update();
+document.querySelectorAll('input,textarea').forEach(e=>e.addEventListener('input',update));
+
+/* ========= COPY ========= */
+$('copyStandard').onclick=()=>{navigator.clipboard.writeText(buildHtml(false));alert('HTML kopiert');};
+$('copyInline').onclick=()=>{navigator.clipboard.writeText(buildHtml(true));alert('eBay-sicheres HTML kopiert');};
+
+/* ========= AUTO MOBILE PREVIEW ========= */
+const wrap=$('previewWrap');
+let manual=false;
+function auto(){
+ if(manual) return;
+ if(window.innerWidth<900){
+  wrap.classList.add('preview-mobile');
+  wrap.classList.remove('preview-desktop');
+ }else{
+  wrap.classList.add('preview-desktop');
+  wrap.classList.remove('preview-mobile');
+ }
+}
+auto();
+window.addEventListener('resize',auto);
+$('viewDesktop').onclick=()=>{manual=true;wrap.classList.add('preview-desktop');wrap.classList.remove('preview-mobile');};
+$('viewMobile').onclick=()=>{manual=true;wrap.classList.add('preview-mobile');wrap.classList.remove('preview-desktop');};
+</script>
+</body>
+</html>
