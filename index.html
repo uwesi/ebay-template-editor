@@ -1,382 +1,230 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>eBay Template Editor (Single File)</title>
-  <style>
-    /* Editor-Styles (nur für die GitHub-Seite) */
-    :root{--muted:#f4f6f8;--accent:#0b79ff;--maxw:1200px}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--muted);color:#0b1a2b}
-    .app{max-width:var(--maxw);margin:12px auto;padding:12px}
-    header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-    header h1{font-size:1rem;margin:0}
-    .controls{display:flex;gap:8px;align-items:center}
-    .controls select, .controls button{padding:8px 10px;border-radius:8px;border:1px solid #e6eef8;background:#fff}
-    .editor-grid{display:grid;grid-template-columns:1fr;gap:12px}
-    .editor-form{display:grid;gap:10px;padding:12px;background:#fff;border-radius:10px;box-shadow:0 6px 18px rgba(10,18,28,0.04)}
-    label{display:block;font-size:0.9rem}
-    input, textarea, select{width:100%;padding:8px;border-radius:8px;border:1px solid #e6eef8;font-size:0.95rem}
-    .preview-pane{background:#fff;padding:8px;border-radius:10px;box-shadow:0 6px 18px rgba(10,18,28,0.04);display:flex;flex-direction:column;gap:8px}
-    iframe{width:100%;height:560px;border-radius:6px;border:1px solid #eef4fb}
-    .final-html textarea{width:100%;padding:8px;border-radius:6px;border:1px solid #e6eef8;font-family:monospace}
-    .row{display:flex;gap:8px}
-    .small{font-size:0.85rem;color:#556070;display:flex;gap:10px;align-items:center}
-    footer{margin-top:12px;font-size:0.85rem;color:#556070}
-    @media(min-width:960px){.editor-grid{grid-template-columns:420px 1fr}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>eBay Template Editor – No-Code</title>
+
+<style>
+/* =========================
+   EDITOR (nur GitHub-Seite)
+   ========================= */
+:root{
+  --bg:#f4f6f8;
+  --accent:#0b79ff;
+  --card:#ffffff;
+  --radius:10px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:#0b1a2b;
+}
+.app{max-width:1200px;margin:12px auto;padding:12px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+h1{font-size:1rem;margin:0}
+.controls{display:flex;gap:8px;align-items:center}
+select,button,input,textarea{
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #e0e6ee;
+  font-size:0.95rem;
+}
+button{cursor:pointer}
+.grid{display:grid;gap:12px}
+@media(min-width:960px){.grid{grid-template-columns:420px 1fr}}
+
+.form{
+  background:#fff;
+  padding:12px;
+  border-radius:var(--radius);
+  display:grid;
+  gap:10px;
+}
+label{font-size:0.85rem}
+.preview{
+  background:#fff;
+  border-radius:var(--radius);
+  padding:8px;
+}
+iframe{width:100%;height:600px;border:1px solid #e5eaf0;border-radius:6px}
+.small{font-size:0.8rem;color:#556}
+textarea{resize:vertical}
+
+/* =========================
+   EBAY TEMPLATE STYLES
+   ========================= */
+</style>
 </head>
+
 <body>
-  <main class="app">
-    <header>
-      <h1>eBay Template Editor — Single File</h1>
-      <div class="controls">
-        <label style="margin:0">
-          Template
-          <select id="template-select" style="width:auto;margin-left:6px">
-            <option value="dark">Dunkelblau (Modern)</option>
-            <option value="light">Hell / Clean</option>
-          </select>
-        </label>
+<div class="app">
 
-        <button id="copy-btn" title="Fertiges HTML kopieren">HTML kopieren</button>
-        <button id="download-btn" title="Fertiges HTML herunterladen">Herunterladen</button>
-      </div>
-    </header>
+<header>
+  <h1>eBay Template Editor (Privatverkauf)</h1>
+  <div class="controls">
+    <select id="theme">
+      <option value="blue">Blau (Standard)</option>
+      <option value="light">Hellgrau / Clean</option>
+      <option value="green">Grün</option>
+      <option value="dark">Anthrazit</option>
+      <option value="red">Bordeaux</option>
+    </select>
+    <button id="copy">HTML kopieren</button>
+  </div>
+</header>
 
-    <section class="editor-grid">
-      <!-- Links: Eingabefelder -->
-      <form id="editor-form" class="editor-form" autocomplete="off" onsubmit="return false;">
-        <label>Titel
-          <input id="field-title" placeholder="Titel eingeben (z. B. &quot;Ikea Sofa, 3-Sitzer&quot;)" />
-        </label>
+<div class="grid">
 
-        <label>Preis
-          <input id="field-price" placeholder="z. B. 49,99 &euro;" />
-        </label>
+<!-- ======= FORMULAR ======= -->
+<div class="form">
 
-        <label>Zustand
-          <input id="field-condition" placeholder="z. B. Gebraucht, neuwertig" />
-        </label>
+<label>Titel
+<input id="title" placeholder="Artikelbezeichnung">
+</label>
 
-        <label>Marke / Kategorie
-          <input id="field-brand" placeholder="z. B. Ikea, Samsung" />
-        </label>
+<label>Preis
+<input id="price" placeholder="z. B. 49,99 €">
+</label>
 
-        <label>Beschreibung (Absatz)
-          <textarea id="field-description" rows="6" placeholder="Detaillierte Beschreibung..."></textarea>
-        </label>
+<label>Zustand
+<input id="condition" placeholder="z. B. Gebraucht, Sehr gut">
+</label>
 
-        <div class="row">
-          <label style="flex:1">Bulletpoint 1
-            <input id="field-b1" placeholder="z. B. inkl. OVP" />
-          </label>
-          <label style="flex:1">Bulletpoint 2
-            <input id="field-b2" placeholder="z. B. 2 Jahre alt" />
-          </label>
-        </div>
+<label>Beschreibung
+<textarea id="description" rows="5"></textarea>
+</label>
 
-        <div class="row">
-          <label style="flex:1">Bulletpoint 3
-            <input id="field-b3" placeholder="z. B. leichte Gebrauchsspuren" />
-          </label>
-          <label style="flex:1">Bulletpoint 4
-            <input id="field-b4" placeholder="Optional: z. B. Versand inkl." />
-          </label>
-        </div>
+<label>Bulletpoints (jede Zeile = ein Punkt)
+<textarea id="bullets" rows="6" placeholder="✔ stabil&#10;✔ gepflegt&#10;✔ Nichtraucherhaushalt"></textarea>
+</label>
 
-        <label>Lieferumfang
-          <input id="field-delivery" placeholder="z. B. Ger&auml;t, Kabel, OVP" />
-        </label>
+<label>Rechtshinweis
+<textarea id="legal" rows="3">
+Privatverkauf – keine Garantie, keine Gewährleistung, keine Rücknahme.
+</textarea>
+</label>
 
-        <label>Rechtshinweis (Privatverkaeufer)
-          <textarea id="field-legal" rows="3">&lt;RECHTS-HINWEIS: Privatverk&auml;ufer &ndash; keine Garantie, keine R&uuml;cknahme, Verkauf wie beschrieben.&gt;</textarea>
-        </label>
+<label class="small">
+<input type="checkbox" id="entities" checked>
+ Umlaute automatisch in HTML-Entities umwandeln
+</label>
 
-        <label>Optional: eigenes Design (CSS)
-          <textarea id="field-custom-css" rows="6" placeholder="/* Optionales CSS, z. B. body{background:#fff} .price{color:#f00} */"></textarea>
-        </label>
+</div>
 
-        <div class="small">
-          <label><input id="entities-raw" type="checkbox" checked> Umlaute automatisch in HTML-Entities umwandeln</label>
-          <label><input id="autosave" type="checkbox" checked> Eingaben im Browser speichern</label>
-        </div>
-      </form>
+<!-- ======= VORSCHAU ======= -->
+<div class="preview">
+<iframe id="preview"></iframe>
+</div>
 
-      <!-- Rechts: Vorschau & fertiges HTML -->
-      <div class="preview-pane">
-        <iframe id="preview" title="Live-Vorschau" sandbox="allow-same-origin"></iframe>
+</div>
+</div>
 
-        <details class="final-html">
-          <summary style="cursor:pointer">Fertiges HTML anzeigen / kopieren</summary>
-          <textarea id="final-html" rows="10" readonly></textarea>
-        </details>
-      </div>
-    </section>
+<script>
+/* =========================
+   THEMES (FARBSETS)
+   ========================= */
+const THEMES={
+blue:{bg:"#0b2340",accent:"#0b79ff"},
+light:{bg:"#f7f7f7",accent:"#0b79ff"},
+green:{bg:"#0f3d2e",accent:"#2ecc71"},
+dark:{bg:"#1f2933",accent:"#9ca3af"},
+red:{bg:"#4c1d24",accent:"#b91c1c"}
+};
 
-    <footer>
-      <p>Speichere diese Datei als <strong>index.html</strong> in einem GitHub-Repo und aktiviere GitHub Pages (Branch: main, Root: /). Das erzeugte HTML ist JS-frei und eBay-kompatibel.</p>
-    </footer>
-  </main>
+/* =========================
+   UTILITIES
+   ========================= */
+function entities(s){
+  return s.replace(/&/g,"&amp;")
+          .replace(/</g,"&lt;")
+          .replace(/>/g,"&gt;")
+          .replace(/Ä/g,"&Auml;").replace(/ä/g,"&auml;")
+          .replace(/Ö/g,"&Ouml;").replace(/ö/g,"&ouml;")
+          .replace(/Ü/g,"&Uuml;").replace(/ü/g,"&uuml;")
+          .replace(/ß/g,"&szlig;");
+}
 
-  <script>
-  // --- Templates (keine JS in den Templates selbst) ---
-  const TEMPLATES = {
-    dark: `<!doctype html>
+/* =========================
+   UPDATE
+   ========================= */
+function update(){
+  const t=theme.value;
+  const th=THEMES[t];
+  let titleVal=title.value;
+  let descVal=description.value;
+  let legalVal=legal.value;
+  let bulletLines=bullets.value.split("\n").filter(b=>b.trim());
+
+  if(entitiesBox.checked){
+    titleVal=entities(titleVal);
+    descVal=entities(descVal);
+    legalVal=entities(legalVal);
+    bulletLines=bulletLines.map(b=>entities(b));
+  }
+
+  const bulletHtml=bulletLines.map(b=>`
+  <li><span class="check">✔</span>${b}</li>`).join("");
+
+  const html=`<!doctype html>
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{{TITLE}}</title>
 <style>
-:root{--bg:#0b2340;--card:#ffffff;--accent:#0b79ff;--sub:#54607a}
-body{margin:0;background:#f4f6f8;font-family:Arial,Helvetica,sans-serif;color:#0b1a2b}
-.card{max-width:920px;margin:10px auto;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(10,18,28,0.06)}
-.hero{background:linear-gradient(180deg,var(--bg),#0f3156);color:#fff;padding:18px;display:flex;gap:12px;align-items:center}
-.hero img{width:110px;height:80px;object-fit:cover;border-radius:10px;background:#e9eef6}
-.hero h1{margin:0;font-size:1.05rem}
-.meta{margin-top:8px;display:flex;gap:8px;align-items:center}
-.price{background:linear-gradient(90deg,#0b79ff,#053f8a);color:#fff;padding:10px 14px;border-radius:10px;font-weight:800}
-.content{padding:16px}
-.section{margin-bottom:14px}
-h2{margin:0 0 8px;font-size:0.95rem}
-p{margin:0;color:var(--sub);line-height:1.55}
-ul{margin:8px 0 0;padding-left:18px;color:var(--sub)}
-.legal{padding:12px 16px;border-top:1px dashed #e6eef8;background:linear-gradient(180deg, rgba(11,121,255,0.02), transparent);font-size:0.9rem;color:var(--sub)}
-@media(max-width:760px){.hero{flex-direction:column;align-items:flex-start}.hero img{width:100%;height:auto}}
+body{margin:0;font-family:Arial;background:#f4f6f8}
+.card{max-width:900px;margin:10px auto;background:#fff;border-radius:12px;overflow:hidden}
+.header{background:${th.bg};color:#fff;padding:16px}
+.price{color:${th.accent};font-weight:bold}
+.section{padding:16px}
+ul{list-style:none;padding:0;margin:0}
+li{margin:6px 0}
+.check{color:${th.accent};font-weight:bold;margin-right:6px}
+.legal{font-size:12px;color:#555;border-top:1px dashed #ddd;padding:12px}
 </style>
-{{CUSTOM_CSS}}
 </head>
 <body>
-<article class="card">
-  <header class="hero">
-    <img src="https://via.placeholder.com/440x320?text=Bild+hinzuf&uuml;gen" alt="Artikelbild">
-    <div>
-      <h1>{{TITLE}}</h1>
-      <div class="meta">
-        <div class="price">{{PRICE}}</div>
-        <div style="color:#fff;opacity:0.9;margin-left:8px">{{CONDITION}}</div>
-      </div>
-      <div style="margin-top:8px;color:#d6e6ff;font-size:0.9rem">{{BRAND}}</div>
-    </div>
-  </header>
-
-  <div class="content">
-    <section class="section">
-      <h2>Beschreibung</h2>
-      <p>{{DESCRIPTION}}</p>
-    </section>
-
-    <section class="section">
-      <h2>Highlights</h2>
-      <ul>
-        <li>{{BULLET_1}}</li>
-        <li>{{BULLET_2}}</li>
-        <li>{{BULLET_3}}</li>
-        <li>{{BULLET_4}}</li>
-      </ul>
-    </section>
-
-    <section class="section">
-      <h2>Lieferumfang</h2>
-      <p>{{DELIVERY}}</p>
-    </section>
-  </div>
-
-  <div class="legal">
-    {{LEGAL}}
-  </div>
-</article>
-</body>
-</html>`,
-
-    light: `<!doctype html>
-<html lang="de">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{{TITLE}}</title>
-<style>
-body{margin:0;background:#f7fafc;font-family:Arial,Helvetica,sans-serif;color:#111827}
-.container{max-width:920px;margin:12px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,0.06)}
-.media img{width:100%;height:auto;display:block}
-.info{padding:16px}
-h1{margin:0 0 8px;font-size:1.1rem}
-.price{display:inline-block;background:linear-gradient(90deg,#0b79ff,#0066d6);color:#fff;padding:8px 12px;border-radius:8px;font-weight:700}
-.section{padding:16px;border-top:1px solid #eef2f6}
-p{margin:0;color:#6b7280;line-height:1.55}
-ul{margin:8px 0 0;padding-left:18px;color:#6b7280}
-.legal{padding:12px 16px;border-top:1px dashed #e6e9ee;font-size:0.9rem;color:#6b7280}
-@media(min-width:760px){.layout{display:grid;grid-template-columns:1fr 360px}}
-</style>
-{{CUSTOM_CSS}}
-</head>
-<body>
-<div class="container">
-  <div class="media">
-    <img src="https://via.placeholder.com/900x600?text=Hauptbild+hier" alt="Hauptbild">
-  </div>
-
-  <div class="info">
-    <h1>{{TITLE}}</h1>
-    <div style="margin:8px 0">
-      <span class="price">{{PRICE}}</span>
-      <span style="margin-left:8px;color:#6b7280">{{CONDITION}}</span>
-    </div>
-    <p style="margin-top:10px">{{BRAND}}</p>
+<div class="card">
+  <div class="header">
+    <h1>${titleVal}</h1>
+    <div class="price">${price.value}</div>
+    <div>${condition.value}</div>
   </div>
 
   <div class="section">
-    <h2>Beschreibung</h2>
-    <p>{{DESCRIPTION}}</p>
+    <p>${descVal}</p>
+    <ul>${bulletHtml}</ul>
   </div>
 
-  <div class="section">
-    <h2>Details & Highlights</h2>
-    <ul>
-      <li>{{BULLET_1}}</li>
-      <li>{{BULLET_2}}</li>
-      <li>{{BULLET_3}}</li>
-      <li>{{BULLET_4}}</li>
-    </ul>
-  </div>
-
-  <div class="section">
-    <h2>Lieferumfang</h2>
-    <p>{{DELIVERY}}</p>
-  </div>
-
-  <div class="legal">
-    {{LEGAL}}
-  </div>
+  <div class="legal">${legalVal}</div>
 </div>
 </body>
-</html>`
-  };
+</html>`;
 
-  // --- Elements ---
-  const selectEl = document.getElementById('template-select');
-  const preview = document.getElementById('preview');
-  const finalHtml = document.getElementById('final-html');
-  const copyBtn = document.getElementById('copy-btn');
-  const downloadBtn = document.getElementById('download-btn');
+  preview.srcdoc=html;
+  window.finalHtml=html;
+}
 
-  const fields = {
-    TITLE: document.getElementById('field-title'),
-    PRICE: document.getElementById('field-price'),
-    CONDITION: document.getElementById('field-condition'),
-    BRAND: document.getElementById('field-brand'),
-    DESCRIPTION: document.getElementById('field-description'),
-    BULLET_1: document.getElementById('field-b1'),
-    BULLET_2: document.getElementById('field-b2'),
-    BULLET_3: document.getElementById('field-b3'),
-    BULLET_4: document.getElementById('field-b4'),
-    DELIVERY: document.getElementById('field-delivery'),
-    LEGAL: document.getElementById('field-legal'),
-    CUSTOM_CSS: document.getElementById('field-custom-css')
-  };
+const theme=document.getElementById("theme");
+const title=document.getElementById("title");
+const price=document.getElementById("price");
+const condition=document.getElementById("condition");
+const description=document.getElementById("description");
+const bullets=document.getElementById("bullets");
+const legal=document.getElementById("legal");
+const entitiesBox=document.getElementById("entities");
+const preview=document.getElementById("preview");
 
-  const entitiesCheckbox = document.getElementById('entities-raw');
-  const autosaveCheckbox = document.getElementById('autosave');
+document.querySelectorAll("input,textarea,select")
+  .forEach(e=>e.addEventListener("input",update));
 
-  let currentHtml = '';
+document.getElementById("copy").onclick=()=>{
+  navigator.clipboard.writeText(window.finalHtml);
+  alert("HTML kopiert – bereit für eBay");
+};
 
-  // --- Utilities ---
-  function toEntities(str) {
-    if (!str) return '';
-    return String(str)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;')
-      .replace(/'/g,'&#39;')
-      .replace(/Ä/g,'&Auml;').replace(/ä/g,'&auml;')
-      .replace(/Ö/g,'&Ouml;').replace(/ö/g,'&ouml;')
-      .replace(/Ü/g,'&Uuml;').replace(/ü/g,'&uuml;')
-      .replace(/ß/g,'&szlig;');
-  }
-
-  function replaceAll(tpl, key, val) {
-    return tpl.split(`{{${key}}}`).join(val);
-  }
-
-  function applyTemplateRaw(templateKey, convertEntities) {
-    let tpl = TEMPLATES[templateKey];
-    // Ensure CUSTOM_CSS placeholder exists
-    const css = fields.CUSTOM_CSS.value || '';
-    tpl = replaceAll(tpl, 'CUSTOM_CSS', css ? `<style>${css}</style>` : '');
-    for (const k in fields) {
-      if (k === 'CUSTOM_CSS') continue; // handled
-      const raw = fields[k].value || '';
-      const v = convertEntities ? toEntities(raw) : raw;
-      tpl = replaceAll(tpl, k, v);
-    }
-    return tpl;
-  }
-
-  // --- Save / Load ---
-  function save() {
-    if (!autosaveCheckbox.checked) return;
-    const data = {template: selectEl.value, entities: entitiesCheckbox.checked, autosave: autosaveCheckbox.checked};
-    for (const k in fields) data[k] = fields[k].value;
-    localStorage.setItem('ebay-editor-singlefile-v1', JSON.stringify(data));
-  }
-
-  function loadSaved() {
-    try {
-      const saved = JSON.parse(localStorage.getItem('ebay-editor-singlefile-v1') || '{}');
-      if (saved.template) selectEl.value = saved.template;
-      if (typeof saved.entities !== 'undefined') entitiesCheckbox.checked = saved.entities;
-      if (typeof saved.autosave !== 'undefined') autosaveCheckbox.checked = saved.autosave;
-      for (const k in fields) if (saved[k]) fields[k].value = saved[k];
-    } catch(e){}
-  }
-
-  // --- Update preview & final ---
-  function update() {
-    const tplKey = selectEl.value;
-    const out = applyTemplateRaw(tplKey, entitiesCheckbox.checked);
-    currentHtml = out;
-    preview.srcdoc = out;
-    finalHtml.value = out;
-    save();
-  }
-
-  // --- Copy & Download ---
-  copyBtn.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(currentHtml);
-      copyBtn.textContent = 'Kopiert!';
-      setTimeout(()=>copyBtn.textContent='HTML kopieren',1200);
-    } catch(e){
-      alert('Kopieren fehlgeschlagen. Bitte das Feld manuell kopieren.');
-    }
-  });
-
-  downloadBtn.addEventListener('click', () => {
-    const blob = new Blob([currentHtml], {type: 'text/html;charset=utf-8'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const safeName = (fields.TITLE.value ? fields.TITLE.value.replace(/[^\w\- ]+/g,'').replace(/\s+/g,'_') : 'ebay-template');
-    a.href = url;
-    a.download = safeName + '.html';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  });
-
-  // --- Events ---
-  selectEl.addEventListener('change', update);
-  entitiesCheckbox.addEventListener('change', update);
-  autosaveCheckbox.addEventListener('change', save);
-  for (const k in fields) fields[k].addEventListener('input', update);
-
-  // initial
-  loadSaved();
-  update();
-
-  </script>
+update();
+</script>
 </body>
 </html>
