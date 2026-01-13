@@ -1,183 +1,60 @@
-<!doctype html>
-<html lang="de">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>eBay Template Editor – stabil</title>
+<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 850px; margin: 20px auto; background: #fff; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+    
+    <div style="background: #232f3e; color: #fff; padding: 30px 20px; text-align: center;">
+        <h1 style="margin: 0; font-size: 24px; letter-spacing: 0.5px;">eBay Vorlage mit Online-Editor</h1>
+        <p style="margin: 10px 0 0 0; opacity: 0.9; font-size: 16px;">Ideal für Privatverkäufer</p>
+    </div>
 
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8}
-.app{max-width:1200px;margin:12px auto;padding:12px}
-header{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:12px}
-h1{font-size:1rem;margin:0}
-.controls{display:flex;gap:6px;flex-wrap:wrap}
-button,input,textarea{padding:8px;border-radius:8px;border:1px solid #dde6ef;font-size:0.9rem}
-button{cursor:pointer}
-.primary{background:#0b79ff;color:#fff;border:none}
-.grid{display:grid;gap:12px}
-@media(min-width:960px){.grid{grid-template-columns:420px 1fr}}
-.card{background:#fff;padding:12px;border-radius:10px;border:1px solid #e6eef6}
-label{font-size:0.85rem}
-textarea,input{width:100%;resize:vertical}
-iframe{height:720px;border:1px solid #e6eef6;border-radius:6px;background:#fff}
+    <div style="background: #37475a; color: #fff; display: flex; justify-content: space-around; padding: 12px; font-size: 13px; flex-wrap: wrap; gap: 10px;">
+        <span style="white-space: nowrap;">📦 Sofortiger Versand</span>
+        <span style="white-space: nowrap;">🤝 Privatverkauf</span>
+        <span style="white-space: nowrap;">⭐ Geprüfte Qualität</span>
+    </div>
 
-/* Preview modes */
-.preview-desktop iframe{width:100%}
-.preview-mobile{display:flex;justify-content:center}
-.preview-mobile iframe{
-  width:375px;
-  max-width:100%;
-  border:2px solid #d1d5db;
-  border-radius:18px;
-}
-.small{font-size:0.8rem;color:#555}
-</style>
-</head>
+    <div style="padding: 30px;">
+        <h2 style="color: #232f3e; font-size: 20px; border-bottom: 2px solid #232f3e; padding-bottom: 8px;">Beschreibung</h2>
+        <p>
+            Professionell verkaufen – ohne Programmierkenntnisse. 
+            Diese moderne eBay-Vorlage wurde speziell für Privatverkäufer entwickelt. 
+            Einfach Felder ausfüllen, Vorschau ansehen und den fertigen HTML-Code bei eBay einfügen.
+        </p>
+        <p><strong>Das Paket beinhaltet:</strong> Professionelles eBay-Template inklusive Online-Editor.</p>
 
-<body>
-<div class="app">
+        <h3 style="margin-top: 25px; font-size: 18px;">Lieferumfang & Ablauf</h3>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #eee; padding: 8px 0;">
+                <span style="color: #2e7d32; font-weight: bold; font-size: 18px;">✓</span>
+                <span><strong>Kauf:</strong> Link zum Editor erhalten</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #eee; padding: 8px 0;">
+                <span style="color: #2e7d32; font-weight: bold; font-size: 18px;">✓</span>
+                <span><strong>Eingabe:</strong> Daten bequem eintragen</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #eee; padding: 8px 0;">
+                <span style="color: #2e7d32; font-weight: bold; font-size: 18px;">✓</span>
+                <span><strong>Kopieren:</strong> Fertigen Code generieren</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #eee; padding: 8px 0;">
+                <span style="color: #2e7d32; font-weight: bold; font-size: 18px;">✓</span>
+                <span><strong>Einfügen:</strong> In eBay HTML-Editor kopieren</span>
+            </div>
+        </div>
 
-<header>
-  <h1>eBay Template Editor (stabil)</h1>
-  <div class="controls">
-    <button id="viewDesktop">🖥 Desktop</button>
-    <button id="viewMobile">📱 Mobile</button>
-    <button id="copyStandard">HTML kopieren</button>
-    <button id="copyInline" class="primary">HTML kopieren (eBay-sicher)</button>
-  </div>
-</header>
+        <h3 style="margin-top: 30px; font-size: 18px;">Details & Zustand</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+            <tr>
+                <td style="border: 1px solid #eee; padding: 12px; background: #f9f9f9; width: 30%;"><b>Zustand</b></td>
+                <td style="border: 1px solid #eee; padding: 12px;">Neu / Unbenutzt</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #eee; padding: 12px; background: #f9f9f9;"><b>Abholort</b></td>
+                <td style="border: 1px solid #eee; padding: 12px;">Digitaler Versand / Download</td>
+            </tr>
+        </table>
 
-<div class="grid">
-
-<!-- Editor -->
-<div class="card">
-  <label>Titel
-    <input id="title" value="eBay Template 2026 | Privatverkauf">
-  </label>
-
-  <label>Lead
-    <textarea id="lead">🚀 Verkaufe wie ein Profi!</textarea>
-  </label>
-
-  <label>Beschreibung
-    <textarea id="description">Professionelles eBay-Template inklusive Online-Editor.</textarea>
-  </label>
-
-  <label>Badges
-    <textarea id="badges">📦 Schneller Versand
-🤝 Privatverkauf
-⭐ Geprüfte Qualität</textarea>
-  </label>
-
-  <label>Lieferumfang
-    <textarea id="delivery">Kauf: Link erhalten
-Eingabe: Daten eintragen
-Kopieren: HTML kopieren
-Einfügen: In eBay</textarea>
-  </label>
-
-  <label>Details
-    <textarea id="details">Zustand:Neu
-Abholort:Nicht zutreffend</textarea>
-  </label>
-
-  <label>Rechtshinweis
-    <textarea id="legal">Der Verkauf erfolgt unter Ausschluss jeglicher Sachmangelhaftung.</textarea>
-  </label>
-
-  <label class="small">
-    <input type="checkbox" id="entities" checked> HTML-Entities verwenden
-  </label>
+        <div style="font-size: 12px; color: #777; border-top: 1px dashed #ddd; padding-top: 15px; margin-top: 30px; line-height: 1.4;">
+            <strong>Rechtlicher Hinweis:</strong><br>
+            Der Verkauf erfolgt unter Ausschluss jeglicher Sachmangelhaftung. Die Haftung auf Schadenersatz wegen Verletzungen von Gesundheit, Körper oder Leben und grob fahrlässiger und/oder vorsätzlicher Verletzungen meiner Pflichten als Verkäufer bleibt davon unberührt. Keine Rücknahme.
+        </div>
+    </div>
 </div>
-
-<!-- Preview -->
-<div class="card preview-desktop" id="previewWrap">
-  <iframe id="preview"></iframe>
-</div>
-
-</div>
-</div>
-
-<script>
-const $=id=>document.getElementById(id);
-const ent=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
- .replace(/Ä/g,'&Auml;').replace(/ä/g,'&auml;')
- .replace(/Ö/g,'&Ouml;').replace(/ö/g,'&ouml;')
- .replace(/Ü/g,'&Uuml;').replace(/ü/g,'&uuml;')
- .replace(/ß/g,'&szlig;');
-const lines=v=>v.split('\n').map(x=>x.trim()).filter(Boolean);
-
-function buildHtml(inline=false){
- const c=$('entities').checked;
- const t=c?ent($('title').value):$('title').value;
- const lead=c?ent($('lead').value):$('lead').value;
- const desc=c?ent($('description').value):$('description').value;
- const legal=c?ent($('legal').value):$('legal').value;
-
- const badges=lines($('badges').value).map(b=>`<span>${c?ent(b):b}</span>`).join('');
- const delivery=lines($('delivery').value).map(d=>`
- <div style="display:flex;gap:8px;border-bottom:1px solid #eee;padding:5px 0">
- <span style="color:#2e7d32;font-weight:bold">✓</span><span>${c?ent(d):d}</span></div>`).join('');
- const details=lines($('details').value).map(l=>{
-  const p=l.split(':');
-  return `<tr><td style="border:1px solid #eee;padding:8px"><b>${c?ent(p[0]):p[0]}</b></td>
-  <td style="border:1px solid #eee;padding:8px">${c?ent(p.slice(1).join(':')):p.slice(1).join(':')}</td></tr>`;
- }).join('');
-
- return `<!doctype html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
-body{margin:0;font-family:Arial;background:#f4f6f8}
-.wrap{max-width:850px;margin:10px auto;background:#fff;border:1px solid #ddd;border-radius:8px}
-.hero{background:#232f3e;color:#fff;padding:25px;text-align:center}
-.badges{background:#37475a;color:#fff;display:flex;justify-content:space-around;padding:10px;font-size:13px;flex-wrap:wrap}
-.content{padding:25px}
-.notice{font-size:12px;color:#666;border-top:1px dashed #ddd;padding-top:12px;margin-top:20px}
-table{width:100%;border-collapse:collapse}
-</style>
-</head><body>
-<div class="wrap">
-<div class="hero"><h1>${t}</h1></div>
-<div class="badges">${badges}</div>
-<div class="content">
-<p>${lead}<br><br>${desc}</p>
-<h3>Lieferumfang</h3>${delivery}
-<h3>Details</h3><table>${details}</table>
-<div class="notice"><b>Rechtlicher Hinweis:</b> ${legal}</div>
-</div></div></body></html>`;
-}
-
-function render(){
- const iframe=$('preview');
- const doc=iframe.contentWindow.document;
- doc.open();
- doc.write(buildHtml(false));
- doc.close();
-}
-
-render();
-document.querySelectorAll('input,textarea').forEach(e=>e.addEventListener('input',render));
-
-$('copyStandard').onclick=()=>navigator.clipboard.writeText(buildHtml(false));
-$('copyInline').onclick=()=>navigator.clipboard.writeText(buildHtml(true));
-
-const wrap=$('previewWrap');
-let manual=false;
-function auto(){
- if(manual)return;
- if(window.innerWidth<900){
-  wrap.classList.add('preview-mobile');
-  wrap.classList.remove('preview-desktop');
- }else{
-  wrap.classList.add('preview-desktop');
-  wrap.classList.remove('preview-mobile');
- }
-}
-auto();
-window.addEventListener('resize',auto);
-$('viewDesktop').onclick=()=>{manual=true;wrap.classList.add('preview-desktop');wrap.classList.remove('preview-mobile');};
-$('viewMobile').onclick=()=>{manual=true;wrap.classList.add('preview-mobile');wrap.classList.remove('preview-desktop');};
-</script>
-</body>
-</html>
